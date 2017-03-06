@@ -1,0 +1,14 @@
+readonlyrest:
+    enable: true
+    response_if_req_forbidden: Sorry, your request is forbidden.
+
+    access_control_rules:
+
+    - name: Accept all requests from localhost
+      type: allow
+      hosts: [127.0.0.1]
+
+    - name: Just certain indices, and read only
+      type: allow
+      actions: ["indices:data/read/*"]
+      indices: ["product_catalogue-*"] # index aliases are taken in account!

@@ -1,0 +1,111 @@
+#== Change Elastic and Kibana Default Password ==#
+
+curl -XPUT -u elastic '192.168.19.12:9200/_xpack/security/user/elastic/_password' -d '{
+  "password" : "P@ssw0rd"
+}'
+
+curl -XPUT -u elastic '192.168.19.12:9200/_xpack/security/user/kibana/_password' -d '{
+  "password" : "P@ssw0rd"
+}'
+
+#== Create Role ==#
+
+curl -XPOST -u elastic '192.168.19.12:9200/_xpack/security/role/events_admin' -d '{
+  "indices" : [
+    {
+      "names" : [ "events*" ],
+      "privileges" : [ "all" ]
+    },
+    {
+      "names" : [ ".kibana*" ],
+      "privileges" : [ "manage", "read", "index" ]
+    }
+  ]
+}'
+
+curl -XPOST -u elastic '192.168.19.12:9200/_xpack/security/role/infra' -d '{
+  "indices" : [
+    {
+      "names" : [ "*" ],
+      "privileges" : [ "all" ]
+    }
+  ]
+}'
+
+curl -XPOST -u elastic '192.168.19.12:9200/_xpack/security/role/platform' -d '{
+  "indices" : [
+    {
+      "names" : [ "*" ],
+      "privileges" : [ "read" ]
+    },
+    {
+      "names" : [ ".kibana*" ],
+      "privileges" : [ "manage", "read", "index" ]
+    }
+  ]
+}'
+
+#== Flash and Create User Role ==#
+/
+curl -XPOST -u elastic '192.168.19.12:9200/_xpack/security/user/kibana_user' -d '{
+  "password" : "P@ssw0rd",
+  "full_name" : "Kibana User",
+  "email" : "kibana_user@elk-server2",
+  "roles" : [ "kibana_user" ]
+}'
+
+curl -XPOST -u elastic '192.168.19.12:9200/_xpack/security/user/events_admin' -d '{
+  "password" : "P@ssw0rd",
+  "full_name" : "Events Admin",
+  "email" : "events_admin@anony.mous",
+  "roles" : [ "events_admin" ]
+}'
+
+curl -XPOST -u elastic '192.168.19.12:9200/_xpack/security/user/transport_client' -d '{
+  "password" : "P@ssw0rd",
+  "full_name" : "Transport Client",
+  "email" : "transport_client@elk-server2",
+  "roles" : [ "transport_client" ]
+}'
+
+curl -XPOST -u elastic '192.168.19.12:9200/_xpack/security/user/monitoring_user' -d '{
+  "password" : "P@ssw0rd",
+  "full_name" : "Monitoring User",
+  "email" : "monitoring_user@elk-server2",
+  "roles" : [ "monitoring_user" ]
+}'
+
+curl -XPOST -u elastic '192.168.19.12:9200/_xpack/security/user/remote_monitoring_agent' -d '{
+  "password" : "P@ssw0rd",
+  "full_name" : "Remote Monitoring Agent",
+  "email" : "remote_monitoring_agent@elk-server2",
+  "roles" : [ "remote_monitoring_agent" ]
+}'
+
+curl -XPOST -u elastic '192.168.19.12:9200/_xpack/security/user/ingest_admin' -d '{
+  "password" : "P@ssw0rd",
+  "full_name" : "Ingest Admin",
+  "email" : "ingest_admin@elk-server2",
+  "roles" : [ "ingest_admin" ]
+}'
+
+curl -XPOST -u elastic '192.168.19.12:9200/_xpack/security/user/reporting_user' -d '{
+  "password" : "P@ssw0rd",
+  "full_name" : "Reporting User",
+  "email" : "reporting_user@elk-server2",
+  "roles" : [ "reporting_user" ]
+}'
+
+curl -XPOST -u elastic '192.168.19.12:9200/_xpack/security/user/infra' -d '{
+  "password" : "infra123",
+  "full_name" : "Infra User",
+  "email" : "infra@elk-server2",
+  "roles" : [ "infra" ]
+}'
+
+curl -XPOST -u elastic '192.168.19.12:9200/_xpack/security/user/platform' -d '{
+  "password" : "platform123",
+  "full_name" : "platform User",
+  "email" : "platform@elk-server2",
+  "roles" : [ "platform" ]
+}'

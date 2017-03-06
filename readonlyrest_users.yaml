@@ -1,0 +1,62 @@
+readonlyrest:
+    enable: true
+
+    response_if_req_forbidden: Forbidden by ReadonlyREST ES plugin
+
+    access_control_rules:
+
+    - name: "::LOGSTASH::"
+      # auth_key is good for testing, but replace it with `auth_key_sha1`!
+      auth_key: logstash:logstash
+      type: allow
+      #actions: ["indices:admin/types/exists","indices:data/read/*","indices:data/write/*","indices:admin/template/*","indices:admin/create"]
+      actions: ["*"]
+      indices: ["*"]
+
+    # We trust this server side component, full access granted via HTTP authentication
+    - name: "::KIBANA-SRV::"
+      # auth_key is good for testing, but replace it with `auth_key_sha1`!
+      auth_key: kibana:kibana
+      type: allow
+
+    # Logs in via HTTP Basic Authentication, has RW access to kibana but zero access to non-kibana actions.
+    - name: "::RW DEVELOPER::"
+      auth_key: rw:dev
+      type: allow
+      kibana_access: rw
+      indices: [".kibana", ".kibana-devnull", "elk-client3-*"]
+
+    # Cannot configure or edit dashboards and visualizations.
+    - name: "::RO DEVELOPER::"
+      auth_key: ro:dev
+      type: allow
+      kibana_access: ro
+      indices: [".kibana", ".kibana-devnull", "elk-client3-*"]
+
+    # No authentication required to read from this index
+    - name: "::PUBLIC SEARCH::"
+      type: allow
+      indices: ["public"]
+      actions: ["indices:data/read/*"]
+
+    # Elastic Superuser
+    - name: "::SUPERUSER::"
+      type: allow
+      auth_key: elastic:elastic321
+      indices: ["*"]
+      actions: ["*"]
+
+    # Infra User
+    - name: "::INFRA USER::"
+      type: allow
+      auth_key: infra:infra321
+      kibana_access: rw
+      indices: ["*"]
+      actions: ["*"]
+
+    # Platform User
+    - name: "::PLATFORM USER::"
+      type: allow
+      auth_key: platform:platform123
+      kibana_access: rw
+      indices: [".kibana", ".kibana-devnull", "elk-client3-*"]

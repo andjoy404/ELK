@@ -1,0 +1,11 @@
+elasticsearch.yml > path.repo: ["/etc/elasticsearch/backup"] << EOF
+
+curl -XPUT 'http://192.168.19.12:9200/_snapshot/backup' -d '{
+ "type": "fs",
+ "settings": {
+     "location": "/etc/elasticsearch/backup",
+     "compress": true
+  }
+}'
+
+curl -XPUT http://192.168.19.12:9200/_snapshot/backup/snapshot_1?wait_for_completion=true
