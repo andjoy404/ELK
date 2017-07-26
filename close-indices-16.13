@@ -1,0 +1,3 @@
+curl -XPOST 10.11.16.13:9200/nginx-access-`date +%Y.%m.%d -d "-7 day"`/_close
+curl -XPOST 10.11.16.13:9200/nginx-error-`date +%Y.%m.%d -d "-7 day"`/_close
+curl -XPOST 10.11.16.13:9200/app*-`date +%Y.%m.%d -d "-7 day"`/_close
